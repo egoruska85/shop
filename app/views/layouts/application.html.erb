@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Shop</title>
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <%= csrf_meta_tags %>
+    <%= csp_meta_tag %>
+
+    <%= stylesheet_link_tag 'application', media: 'all', 'data-turbolinks-track': 'reload' %>
+    <%= javascript_pack_tag 'application', 'data-turbolinks-track': 'reload' %>
+    <%= stylesheet_pack_tag 'application', 'data-turbolinks-track': 'reload' %>
+  </head>
+
+  <body>
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+      <div class="container-fluid">
+        <%= link_to root_path, class:"navbar-brand" do %>
+          <b><em>LINK</em></b>
+        <% end %>
+
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+          <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+            <li class="nav-item">
+              <a class="nav-link active" aria-current="page" href="#">Home</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="#">Link</a>
+            </li>
+
+            <li class="nav-item">
+              <a class="nav-link" href="#">Disabled</a>
+            </li>
+
+
+          </ul>
+
+          <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal" data-bs-whatever="@mdo"><i class="bi bi-person-fill"></i></button>
+
+<% if current_user == nil %>
+          <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+              <div class="modal-content">
+                 <%= link_to new_user_session_path, class:'btn btn-success' do %>
+                  <i class="bi bi-person-check-fill"></i><br><%= t('enter')%>
+                 <% end %>
+              </div>
+              <div class="modal-content">
+                 <%= link_to new_user_registration_path, class:'btn btn-warning' do %>
+                 <i class="bi bi-person-plus-fill"></i><br>
+                  <%= t('add_user')%>
+                 <% end %>
+              </div>
+            </div>
+          </div>
+<% end %>
+<% if current_user%>
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+       <%= link_to destroy_user_session_path, class:'btn btn-dark', method: :delete do %>
+       <i class="bi bi-person-dash"></i><br><%= t('quit')%>
+       <% end %>
+    </div>
+    <div class="modal-content">
+       <%= link_to edit_user_registration_path(current_user.id), class:'btn btn-success' do %>
+        <i class="bi bi-pencil-fill"></i>
+        <br>
+        <%= t('edit_user')%>
+       <% end %>
+    </div>
+    <br>
+<% if current_user.admin == true %>
+    <div class="modal-content">
+       <%= link_to "/admin", class:'btn btn-danger' do %>
+        <i class="bi bi-tools"></i>
+        <br>
+        <%= t('admins')%>
+       <% end %>
+    </div>
+    <% end %>
+  </div>
+</div>
+<% end %>
+        </div>
+
+      </div>
+    </nav>
+    <div class="container">
+
+    <ul class="nav nav-tabs">
+    <% if params[:id] == nil %>
+      <li class="nav-item">
+
+          <p class="nav-link active" ><%= "ТОП" %></p>
+
+      </li>
+    <% else %>
+    <li class="nav-item">
+      <%= link_to root_path, class:"nav-link" do %>
+        <%= "ТОП" %>
+      <% end %>
+    </li>
+    <% end %>
+
+
+    <% @categories.each do |category| %>
+    <li class="nav-item">
+      <% if category.id == params[:id].to_i %>
+
+        <p class="nav-link active"><%= category.name %></p>
+
+      <% end %>
+      <% if category.id != params[:id].to_i %>
+      <%= link_to category_path(category), class:"nav-link" do %>
+        <%= category.name %>
+      <% end %>
+      <% end %>
+    </li>
+
+    <% end %>
+
+    </ul>
+
+    </div>
+<center>
+<p class="notice"><%= notice %></p>
+<p class="alert"><%= alert %></p>
+</center>
+    <%= yield %>
+  </body>
+</html>
